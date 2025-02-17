@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:wastenot/features/authentication/views/login/login_view.dart';
 
 class OnBoardingController extends GetxController{
   static OnBoardingController get instance => Get.find();
@@ -25,7 +26,7 @@ class OnBoardingController extends GetxController{
     if(currentPageIndex.value == 2){
       final storage = GetStorage();
       storage.write('isFirstTime', false);
-      // Get.offAll(const LoginView());
+      Get.offAll(const LoginView());
     }else{
       int page = currentPageIndex.value + 1;
       pageController.jumpToPage(page);
@@ -37,7 +38,7 @@ class OnBoardingController extends GetxController{
   void skipPage(){
     currentPageIndex.value = 2;
     pageController.jumpToPage(2);
-    // Get.to(LoginView());
+    Get.to(LoginView());
   }
 
 

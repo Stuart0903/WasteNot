@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "736737811654",
+    "project_id": "wastenott-2a064",
+    "storage_bucket": "wastenott-2a064.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736737811654:android:b1eeeb8873341f5131cbc7",
+        "android_client_info": {
+          "package_name": "com.example.wastenot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "736737811654-9582uilsv6mqb6jr5llrvr39fn64td8k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wastenot",
+            "certificate_hash": "866423fbe6ab55a14ffd691ab67e57e5fadcd37d"
+          }
+        },
+        {
+          "client_id": "736737811654-2oh3o0g0dfhhia6sk6lhtpliqvr6pr9g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdmF9OV1saDd8jfI9jLtSptDUJJLx9g-k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "736737811654-2oh3o0g0dfhhia6sk6lhtpliqvr6pr9g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "736737811654-s5k8lj9bb25803isksmdjis8oi3gejpv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.wastenot"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
