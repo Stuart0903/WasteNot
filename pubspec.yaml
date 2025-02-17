@@ -43,6 +43,7 @@ dependencies:
 
   #SVG File#
   flutter_svg: ^2.0.17
+  google_sign_in: ^6.2.2
 
 
   #PRODUCT SPECIFIC

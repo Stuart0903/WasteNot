@@ -19,7 +19,9 @@ class WNLoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SignInController());
-    return Form(child:
+    return Form(
+      key: controller.loginFormKey,
+        child:
     Padding(
       padding: const EdgeInsets.symmetric(vertical: WNSizes.spaceBtwSections +10),
       child: Column(
@@ -78,7 +80,11 @@ class WNLoginForm extends StatelessWidget {
           const SizedBox(height: WNSizes.spaceBtwSections,),
 
           ///Sign In Button
-          SizedBox(width: double.infinity, child: ElevatedButton(onPressed: (){}, child: Text(WNTexts.signIn))),
+          SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  onPressed: ()=> controller.emailAndPasswordSignIn(),
+                  child: Text(WNTexts.signIn))),
           const SizedBox(height: WNSizes.spaceBtwItems),
           ///Create Account Button
           // SizedBox(width: double.infinity, child: OutlinedButton(onPressed: () => Get.to(() => const SignupView()) {}, child: Text(WNTexts.createAccount)))
