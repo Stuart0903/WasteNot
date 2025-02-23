@@ -43,7 +43,12 @@ dependencies:
 
   #SVG File#
   flutter_svg: ^2.0.17
+
+  #Authentication
   google_sign_in: ^6.2.2
+#  mobile_scanner: ^6.0.6
+#  qr_code_scanner: ^1.0.1
+  qr_code_scanner_plus: ^2.0.10+1
 
 
   #PRODUCT SPECIFIC
@@ -69,7 +74,8 @@ flutter:
     - assets/images/onboarding_images/
     - assets/images/verification_images/
     - assets/animations/
-    - assets/images/logos/
+    - assets/images/svgimages/
+
 
 
   #-------------LOCAL FONTS---------

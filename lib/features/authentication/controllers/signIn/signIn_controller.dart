@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart%20';
 import 'package:get_storage/get_storage.dart';
 import 'package:wastenot/data/repositories/authentication/auth_repo.dart';
+import 'package:wastenot/features/personalization/controllers/user_conntroller.dart';
 import 'package:wastenot/utils/constants/image_strings.dart';
 import 'package:wastenot/utils/https/network_manager.dart';
 import 'package:wastenot/utils/popups/full_screenLoader.dart';
@@ -15,6 +16,7 @@ class SignInController extends GetxController{
   final email = TextEditingController();
   final password = TextEditingController();
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
+  final userController = Get.put(UserController());
 
   // @override
   // void onInit(){
@@ -61,6 +63,36 @@ class SignInController extends GetxController{
     }catch(e){
       WNFullScreenLoader.stopLoading();
       WNLoaders.errorSnackBar(title: "Oh Snap", message: e.toString());
+    }
+  }
+
+  ///GOogle signIn Authentication
+  Future<void>googleSignIn()async{
+    try{
+      WNFullScreenLoader.openLoadingDialog('Logging you in....', WNImages.loadingAnimation);
+
+      //Check Internet Connectivity
+      final isConnected = await NetworkManager.instance.isConnected();
+      if(!isConnected){
+        WNFullScreenLoader.stopLoading();
+        return;
+      }
+      //Google Authentication
+      final userCredentials = await AuthenticationRepository.instance.signInWithGoogle();
+
+      //Save User Record
+      await userController.saveUserRecord(userCredentials);
+
+      //Remove loaders
+      WNFullScreenLoader.stopLoading();
+
+      //Redirect
+      AuthenticationRepository.instance.screenRedirect();
+
+    }catch(e){
+      //Remove loaders
+      WNFullScreenLoader.stopLoading();
+      WNLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
     }
   }
 

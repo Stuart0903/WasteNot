@@ -54,6 +54,11 @@ class WNTexts{
   static const String changeYourPasswordSubTitle = "Your Account Security Is Our Priority We've Sent You A Secure Link To Safely Change Your Password And Kepp Your Account Protected";
   static const String done = "Done";
 
+  //Home
+  static const String homeAppBarTitle = "Welcome to Waste Not APP";
+  static const String homeAppBarSubTitle = "Arpan Shrestha";
+
+
 
 
 
