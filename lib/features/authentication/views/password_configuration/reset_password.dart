@@ -2,13 +2,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wastenot/features/authentication/controllers/forget_password/forget_password_controller.dart';
+import 'package:wastenot/features/authentication/views/login/login_view.dart';
 import 'package:wastenot/utils/constants/sizes.dart';
 import 'package:wastenot/utils/helpers/helpers.dart';
 import '../../../../utils/constants/image_strings.dart';
 import '../../../../utils/constants/text_strings.dart';
 
-class ResetPassword extends StatelessWidget {
-  const ResetPassword({super.key});
+class ResetPasswordView extends StatelessWidget {
+  const  ResetPasswordView({super.key, required this.email});
+
+  final String email;
 
 
 
@@ -31,18 +35,20 @@ class ResetPassword extends StatelessWidget {
               const SizedBox(height: WNSizes.spaceBtwSections,),
 
               ///Title and Subtitile
+              Text(email, style: Theme.of(context).textTheme.bodyMedium, textAlign: TextAlign.center,),
+              const SizedBox(height: WNSizes.spaceBtwItems,),
               Text(WNTexts.changeYourPasswordTitle, style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center,),
               const SizedBox(height: WNSizes.spaceBtwItems,),
               Text(WNTexts.changeYourPasswordSubTitle, style: Theme.of(context).textTheme.labelMedium, textAlign: TextAlign.center,),
               const SizedBox(height: WNSizes.spaceBtwSections),
 
               ///Buttons
-              SizedBox(width: double.infinity, child: ElevatedButton(onPressed: (){}, child: const Text(WNTexts.done)),),
+              SizedBox(width: double.infinity, child: ElevatedButton(onPressed: ()=> Get.offAll(()=> const LoginView()), child: const Text(WNTexts.done)),),
               const SizedBox(height: WNSizes.spaceBtwSections),
 
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(onPressed: (){}, child: const Text(WNTexts.resendEmail)),),
+                child: ElevatedButton(onPressed: ()=> ForgetPasswordController.instance.resendPasswordResentEmail(email), child: const Text(WNTexts.resendEmail)),),
 
             ],
           ),

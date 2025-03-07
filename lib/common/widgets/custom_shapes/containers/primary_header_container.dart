@@ -12,19 +12,16 @@ class WNPrimaryHeaderContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WNCurvedEdgesWidget(
-      child: SizedBox(
-        height: 230,
-        child: Container(
-          color: WNColors.primary,
-      
-          child: Stack(
-            children: [
-              Positioned(top: -150, right: -250,child: WNCircularContainer(width: 400, height: 400, radius: 400, padding: 0,backgroundColor: WNColors.textWhite.withOpacity(0.2),)),
-              Positioned(top: 100, right: -300,child: WNCircularContainer(width: 400, height: 400, radius: 400, padding: 0,backgroundColor: WNColors.textWhite.withOpacity(0.2),)),
-              child,
-            ],
-          )
-        ),
+      child: Container(
+        color: WNColors.primary,
+
+        child: Stack(
+          children: [
+            Positioned(top: -150, right: -250,child: WNCircularContainer(width: 400, height: 400, radius: 400, padding: 0,backgroundColor: WNColors.textWhite.withOpacity(0.2),)),
+            Positioned(top: 100, right: -300,child: WNCircularContainer(width: 400, height: 400, radius: 400, padding: 0,backgroundColor: WNColors.textWhite.withOpacity(0.2),)),
+            child,
+          ],
+        )
       ),
     );
   }

@@ -6,6 +6,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart%20';
 import 'package:iconsax/iconsax.dart';
 import 'package:wastenot/features/Redeem/views/home/home.dart';
+import 'package:wastenot/features/brands/brands.dart';
+import 'package:wastenot/features/nav_menu/home/views/home_views.dart';
+import 'package:wastenot/features/nav_menu/qr_scanner/view/qr_scanner_view.dart';
+import 'package:wastenot/features/personalization/views/settings/settings.dart';
 import 'package:wastenot/utils/helpers/helpers.dart';
 
 class NavigationMenu extends StatelessWidget {
@@ -45,9 +49,9 @@ class NavigationController extends GetxController{
 
   final screens = [
     const HomeView(),
-    Container(color: Colors.purple),
-    Container(color: Colors.orange),
-    Container(color: Colors.blue),
+    HomePageView(),
+    const QRScannerPage(),
+    const SettingsView(),
   ];
 }
 

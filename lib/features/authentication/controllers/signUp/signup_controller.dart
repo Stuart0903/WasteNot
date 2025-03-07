@@ -1,6 +1,6 @@
-
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:wastenot/data/repositories/authentication/auth_repo.dart';
 import 'package:wastenot/data/repositories/user/user_repo.dart';
 import 'package:wastenot/features/authentication/models/user_model.dart';
@@ -16,27 +16,42 @@ class SignUpController extends GetxController{
   ///Variables
   final hidePassword = true.obs;
   final privaryPolicy = true.obs;
+  final selectedGender = ''.obs;
   final email = TextEditingController();
   final firstName = TextEditingController();
   final lastName = TextEditingController();
   final userName = TextEditingController();
   final password = TextEditingController();
   final phoneNumber = TextEditingController();
+  final dateOfBirth = TextEditingController();
+  final address = TextEditingController();
+
   GlobalKey<FormState> signupFormkey = GlobalKey<FormState>();
 
+  /// Date picker function
+  void selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now().subtract(const Duration(days: 365 * 18)), // Default to 18 years ago
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
 
-
+    if (picked != null) {
+      dateOfBirth.text = DateFormat('yyyy-MM-dd').format(picked);
+    }
+  }
 
   /// SignUp
   void signup() async{
     try{
       //Start Loading
-      WNFullScreenLoader.openLoadingDialog('We are processing your information', WNImages.loadingAnimation);
+      // WNFullScreenLoader.openLoadingDialog('We are processing your information', WNImages.loadingAnimation);
 
       //Check Internet Connectivity
       final isConnected = await NetworkManager.instance.isConnected();
       if (!isConnected){
-        WNFullScreenLoader.stopLoading();
+        // WNFullScreenLoader.stopLoading();
         return;
       }
 
@@ -49,7 +64,7 @@ class SignUpController extends GetxController{
       if(!privaryPolicy.value){
         WNLoaders.warningSnackBar(
             title: "Accept Privacy Policy",
-          message: 'In order to create an account, you must accpet the Privacy Policy & Terms of Use'
+            message: 'In order to create an account, you must accept the Privacy Policy & Terms of Use'
         );
         return;
       }
@@ -59,13 +74,16 @@ class SignUpController extends GetxController{
 
       //Save Authentication userdata in the Firebase Firestore
       final newUser = UserModel(
-          id: userCredential.user!.uid,
-          firstName: firstName.text.trim(),
-          lastName: lastName.text.trim(),
-          userName: userName.text.trim(),
-          email: email.text.trim(),
-          phoneNumber: phoneNumber.text.trim(),
-          profilePicture: '',
+        id: userCredential.user!.uid,
+        firstName: firstName.text.trim(),
+        lastName: lastName.text.trim(),
+        userName: userName.text.trim(),
+        email: email.text.trim(),
+        phoneNumber: phoneNumber.text.trim(),
+        profilePicture: '',
+        gender: selectedGender.value,
+        dateOfBirth: dateOfBirth.text,
+        address: address.text.trim(),
       );
 
       final userRepository = Get.put(UserRepository());
@@ -77,13 +95,10 @@ class SignUpController extends GetxController{
       //Navigate to Verify Email Screen
       Get.to(()=> VerifyEmailView(email: email.text.trim(),));
 
-
-
     }catch(e){
       WNFullScreenLoader.stopLoading();
 
       WNLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
-
-    }
     }
   }
+}

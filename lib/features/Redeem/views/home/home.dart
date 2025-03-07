@@ -1,3 +1,4 @@
+import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
@@ -7,7 +8,13 @@ import 'package:wastenot/common/widgets/custom_shapes/containers/primary_header_
 import 'package:wastenot/common/widgets/custom_shapes/curved_edges/curved_edges.dart';
 import 'package:wastenot/common/widgets/custom_shapes/curved_edges/curved_edges_widget.dart';
 import 'package:wastenot/common/widgets/icons/cart_menu_icon.dart';
+import 'package:wastenot/common/widgets/images/WN_rounded_image.dart';
+import 'package:wastenot/common/widgets/layouts/grid_layout.dart';
+import 'package:wastenot/common/widgets/products/product_cards/product_card_vertical.dart';
+import 'package:wastenot/common/widgets/texts/section_heading.dart';
+import 'package:wastenot/features/Redeem/views/home/widgets/promo_slider.dart';
 import 'package:wastenot/utils/constants/colors.dart';
+import 'package:wastenot/utils/constants/image_strings.dart';
 import 'package:wastenot/utils/constants/sizes.dart';
 import 'package:wastenot/utils/constants/text_strings.dart';
 import 'package:wastenot/utils/device/device_utility.dart';
@@ -25,6 +32,7 @@ class HomeView extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            ///Header
             WNPrimaryHeaderContainer(
               child: Column(
                 children: [
@@ -51,11 +59,41 @@ class HomeView extends StatelessWidget {
                         ],
                       ),
                     ),
-                  )
+                  ),
+                  const SizedBox(height: WNSizes.spaceBtwItems,)
                 ],
 
               )
-            )
+            ),
+
+            ///Body
+            Padding(
+              padding: const EdgeInsets.all(WNSizes.defaultSpace),
+              child: Column(
+                children: [
+                  ///Promo Slider
+                  WNPromoSlider(banner: [
+                    WNImages.onBoardingImage1,
+                    WNImages.onBoardingImage2,
+                    WNImages.onBoardingImage3
+                  ],),
+                  const SizedBox(height: WNSizes.spaceBtwSections,),
+
+                  ///Heading
+                  const WNSectionHeading(title: 'Popular Products',),
+
+                  const SizedBox(height: WNSizes.spaceBtwItems,),
+
+                  ///Popular Products
+                  WNGridLayout(itemCount: 6, itemBuilder: (_, index) => WNProductCardVertical())
+                  // WNProductCardVertical()
+
+                ],
+              ),
+            ),
+
+
+
 
           ],
         ),
@@ -63,6 +101,10 @@ class HomeView extends StatelessWidget {
     );
   }
 }
+
+
+
+
 
 
 

@@ -9,11 +9,13 @@ class WNCircularContainer extends StatelessWidget {
     required this.padding,
     this.child,
     required this.backgroundColor,
+    this.margin,
   });
   final double? width;
   final double? height;
   final double radius;
   final double padding;
+  final EdgeInsets? margin;
   final Widget? child;
   final Color backgroundColor;
 
@@ -22,6 +24,7 @@ class WNCircularContainer extends StatelessWidget {
     return Container(
       width: width,
       height: height,
+      margin: margin,
       padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(radius),

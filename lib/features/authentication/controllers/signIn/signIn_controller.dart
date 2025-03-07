@@ -18,12 +18,7 @@ class SignInController extends GetxController{
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
   final userController = Get.put(UserController());
 
-  // @override
-  // void onInit(){
-  //   email.text = localStorage.read('REMEMBER_ME_EMAIL');
-  //   password.text = localStorage.read('REMEMBER_ME_PASSWORD');
-  //   super.onInit();
-  // }
+
 
 
 
@@ -31,7 +26,7 @@ class SignInController extends GetxController{
   Future<void>emailAndPasswordSignIn() async{
     try{
       //Start loading
-      WNFullScreenLoader.openLoadingDialog('Logging you in... ', WNImages.loadingAnimation);
+      // WNFullScreenLoader.openLoadingDialog('Logging you in... ', WNImages.loadingAnimation);
 
       //Check Internet Connectivity
       final isConnected = await NetworkManager.instance.isConnected();

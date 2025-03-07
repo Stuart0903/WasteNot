@@ -6,6 +6,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart ';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:wastenot/data/repositories/user/user_repo.dart';
 import 'package:wastenot/features/authentication/controllers/signUp/signup_controller.dart';
 import 'package:wastenot/features/authentication/views/login/login_view.dart';
 import 'package:wastenot/features/authentication/views/signup/verify_email.dart';
@@ -23,6 +24,9 @@ class AuthenticationRepository extends GetxController{
   ///Variables
   final deviceStorage = GetStorage();
   final _auth = FirebaseAuth.instance;
+
+  ///Get Authenticated User Data
+  User? get authUser => _auth.currentUser;
 
   ///Call from main.dart on app launch
   @override
@@ -69,6 +73,7 @@ class AuthenticationRepository extends GetxController{
       throw 'Something went wrong, Please try again';
     }
   }
+
 ///Register
   Future<UserCredential> registerWithEmailandPassword(String email, String password)async{
     try{
@@ -103,10 +108,73 @@ class AuthenticationRepository extends GetxController{
     }catch (e){
       throw 'Something went wrong, Please try again';
     }
-
-
-
   }
+
+
+  /// -FORGET PASSWORD
+  Future<void> sendPasswordResetEmail(String email)async{
+      try{
+        await _auth.sendPasswordResetEmail(email: email);
+      }on FirebaseAuthException catch (e){
+        throw WNFirebaseAuthException(e.code).message;
+      }on FirebaseException catch (e){
+        throw WNFirebaseException(e.code).message;
+      }on FormatException catch (e){
+        throw const WNFormatException();
+      }on PlatformException catch (e){
+        throw WNPlatformException(e.code).message;
+      }catch (e){
+        throw 'Something went wrong, Please try again';
+      }
+    }
+
+  Future<void> reAuthenticateWithEmailAndPassword(String email, String password)async{
+    try{
+      AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+
+      await _auth.currentUser!.reauthenticateWithCredential(credential);
+    }on FirebaseAuthException catch (e){
+    throw WNFirebaseAuthException(e.code).message;
+    }on FirebaseException catch (e){
+    throw WNFirebaseException(e.code).message;
+    }on FormatException catch (e){
+    throw const WNFormatException();
+    }on PlatformException catch (e){
+    throw WNPlatformException(e.code).message;
+    }catch (e){
+    throw 'Something went wrong, Please try again';
+    }
+  }
+
+  Future<void> deleteAccount()async{
+    try{
+      await UserRepository.instance.removeUserRecord(_auth.currentUser!.uid);
+      await _auth.currentUser?.delete();
+    }on FirebaseAuthException catch (e){
+      throw WNFirebaseAuthException(e.code).message;
+    }on FirebaseException catch (e){
+      throw WNFirebaseException(e.code).message;
+    }on FormatException catch (e){
+      throw const WNFormatException();
+    }on PlatformException catch (e){
+      throw WNPlatformException(e.code).message;
+    }catch (e){
+      throw 'Something went wrong, Please try again';
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   /// [LogoutUser] - Valid for any authentication.
   Future<void> logout() async {
@@ -125,6 +193,23 @@ class AuthenticationRepository extends GetxController{
       throw 'Something went wrong. Please try again';
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   /// [GoogleAuthentication] - Google

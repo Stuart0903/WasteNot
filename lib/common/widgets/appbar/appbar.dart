@@ -8,12 +8,15 @@ class WNAppBar extends StatelessWidget implements PreferredSizeWidget {
   const WNAppBar({
     super.key,
     this.title,
+    this.subtitle,
     this.showBackArrow = false,
     this.leadingIcon,
     this.action,
-    this.leadingOnPressed
+    this.leadingOnPressed,
   });
+
   final Widget? title;
+  final Widget? subtitle;
   final bool showBackArrow;
   final IconData? leadingIcon;
   final List<Widget>? action;
@@ -22,21 +25,32 @@ class WNAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: WNSizes.md),
+      padding: EdgeInsets.symmetric(horizontal: WNSizes.md),
       child: AppBar(
         automaticallyImplyLeading: false,
         leading: showBackArrow
-            ?IconButton(onPressed: ()=> Get.back(), icon: const Icon(Iconsax.arrow_left))
-        : leadingIcon != null ? IconButton(onPressed: leadingOnPressed, icon: Icon(leadingIcon)) : null,
-        title: title,
+            ? IconButton(
+          onPressed: () => Get.back(),
+          icon: const Icon(Iconsax.arrow_left),
+        )
+            : leadingIcon != null
+            ? IconButton(
+          onPressed: leadingOnPressed,
+          icon: Icon(leadingIcon),
+        )
+            : null,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (title != null) title!,
+            if (subtitle != null) subtitle!,
+          ],
+        ),
         actions: action,
-
-
       ),
     );
   }
 
   @override
-  // TODO: implement preferredSize
   Size get preferredSize => Size.fromHeight(WNDeviceUtils.getAppBarHeight());
 }
