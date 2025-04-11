@@ -15,7 +15,7 @@ class RecyclingData {
     switch (objectType.toLowerCase()) {
       case 'plastic':
         return 3;
-      case 'can':
+      case 'aluminum':
         return 2;
       case 'glass':
         return 2;

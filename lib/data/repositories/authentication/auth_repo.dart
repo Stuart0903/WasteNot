@@ -84,7 +84,7 @@ class AuthenticationRepository extends GetxController{
       throw WNFirebaseAuthException(e.code).message;
     }on FirebaseException catch (e){
       throw WNFirebaseException(e.code).message;
-    }on FormatException catch (e){
+    }on FormatException catch (_){
       throw const WNFormatException();
     }on PlatformException catch (e){
       throw WNPlatformException(e.code).message;
@@ -131,7 +131,6 @@ class AuthenticationRepository extends GetxController{
   Future<void> reAuthenticateWithEmailAndPassword(String email, String password)async{
     try{
       AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
-
       await _auth.currentUser!.reauthenticateWithCredential(credential);
     }on FirebaseAuthException catch (e){
     throw WNFirebaseAuthException(e.code).message;
@@ -164,18 +163,6 @@ class AuthenticationRepository extends GetxController{
   }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
   /// [LogoutUser] - Valid for any authentication.
   Future<void> logout() async {
     try {
@@ -192,6 +179,75 @@ class AuthenticationRepository extends GetxController{
     } catch (e) {
       throw 'Something went wrong. Please try again';
     }
+  }
+
+
+  /// Verify the current password (for Email/Password users)
+  Future<bool> verifyCurrentPassword(String currentPassword) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) throw 'User not logged in';
+
+      // Create a credential with the current password
+      final credential = EmailAuthProvider.credential(
+        email: user.email!, // Use the user's email
+        password: currentPassword,
+      );
+
+      // Reauthenticate the user with the credential
+      await user.reauthenticateWithCredential(credential);
+      return true; // Password is correct
+    } on FirebaseAuthException catch (e) {
+      throw WNFirebaseException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
+
+  /// Update the password (for Email/Password users)
+  Future<void> updatePassword(String newPassword) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) throw 'User not logged in';
+
+      // Update the password
+      await user.updatePassword(newPassword);
+    } on FirebaseAuthException catch (e) {
+      throw WNFirebaseException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
+  /// Link Google account with Email/Password credential (for Google Sign-In users)
+  Future<void> linkGoogleAccountWithPassword(String newPassword) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) throw 'User not logged in';
+
+      // Create a credential with the user's email and new password
+      final credential = EmailAuthProvider.credential(
+        email: user.email!, // Use the user's email
+        password: newPassword,
+      );
+
+      // Link the credential to the user's account
+      await user.linkWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      throw WNFirebaseException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
+  /// Check if the user signed in with Google
+  bool isGoogleUser() {
+    final user = _auth.currentUser;
+    if (user == null) return false;
+
+    // Check if the user has a Google provider
+    return user.providerData.any((userInfo) => userInfo.providerId == 'google.com');
   }
 
 

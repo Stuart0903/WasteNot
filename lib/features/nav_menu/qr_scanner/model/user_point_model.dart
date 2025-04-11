@@ -1,23 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserPoint {
-  String pointId;
-  int totalEarned;
-  int totalRedeemed;
-  int availablePoints;
-  Timestamp lastUpdate;
-  String userId;
+  final String? pointId;
+  final double totalEarned;
+  final double? totalRedeemed;
+  final double availablePoints;
+  final Timestamp lastUpdate;
+  final String? userId;
 
+  ///Constructor for User Point
   UserPoint({
-    required this.pointId,
+    this.pointId,
     required this.totalEarned,
-    required this.totalRedeemed,
+    this.totalRedeemed,
     required this.availablePoints,
     required this.lastUpdate,
-    required this.userId,
+    this.userId,
   });
 
-  ///Static function to create an empty model
+  /// Static function to create an empty model
   static UserPoint empty() => UserPoint(
     pointId: '',
     totalEarned: 0,
@@ -27,8 +28,8 @@ class UserPoint {
     userId: '',
   );
 
-  // Convert a UserPoint object to a Map
-  Map<String, dynamic> toMap() {
+  // Convert  model to JSON for Firestore
+  Map<String, dynamic> toJson() {
     return {
       'point_id': pointId,
       'total_earned': totalEarned,
@@ -39,57 +40,20 @@ class UserPoint {
     };
   }
 
-
-
-  // Create a UserPoint object from a Map
-  factory UserPoint.fromMap(Map<String, dynamic> map) {
-    return UserPoint(
-      pointId: map['point_id'] ?? '',
-      totalEarned: map['total_earned'] ?? 0,
-      totalRedeemed: map['total_redeemed'] ?? 0,
-      availablePoints: map['available_points'] ?? 0,
-      lastUpdate: map['last_update'] ?? Timestamp.now(),
-      userId: map['user_id'] ?? '',
-    );
-  }
-
-  // Convert Firestore DocumentSnapshot to UserPoint object
-  factory UserPoint.fromDocumentSnapshot(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    if(doc.data()!=null){
-      return UserPoint.fromMap(data);
+factory UserPoint.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
+    if(document.data()!= null){
+      final data = document.data()!;
+      return UserPoint(
+        pointId: document.id,
+        totalEarned: data['total_earned'] ?? 0,
+        totalRedeemed: data['total_redeemed'] ?? 0,
+        availablePoints: data['available_points'] ?? 0,
+        lastUpdate: data['last_update'] ?? Timestamp.now(),
+        userId: data['user_id'] ?? '',
+      );
     }else{
       return UserPoint.empty();
     }
+}
 
-  }
-
-  // Helper functions
-  void earnPoints(int points) {
-    totalEarned += points;
-    availablePoints += points;
-    lastUpdate = Timestamp.now();
-  }
-
-  void redeemPoints(int points) {
-    if (points <= availablePoints) {
-      totalRedeemed += points;
-      availablePoints -= points;
-      lastUpdate = Timestamp.now();
-    } else {
-      throw Exception("Not enough available points to redeem");
-    }
-  }
-
-  int getAvailablePoints() {
-    return availablePoints;
-  }
-
-  int getTotalEarnedPoints() {
-    return totalEarned;
-  }
-
-  int getTotalRedeemedPoints() {
-    return totalRedeemed;
-  }
 }

@@ -4,8 +4,8 @@ class UserModel {
   final String id;
   String firstName;
   String lastName;
-  final String userName;
-  final String email;
+  String userName;
+  String email;
   String phoneNumber;
   String profilePicture;
   String gender;
@@ -20,7 +20,7 @@ class UserModel {
     required this.userName,
     required this.email,
     required this.phoneNumber,
-    required this.profilePicture,
+    this.profilePicture = '',
     this.gender = '',
     this.dateOfBirth = '',
     this.address = '',
@@ -66,7 +66,7 @@ class UserModel {
       'UserName': userName,
       'Email': email,
       'PhoneNumber': phoneNumber,
-      'ProfilePicture': profilePicture,
+      'profilePicture': profilePicture,
       'Gender': gender,
       'DateOfBirth': dateOfBirth,
       'Address': address,
@@ -84,7 +84,7 @@ class UserModel {
         userName: data['UserName'] ?? '',
         email: data['Email'] ?? '',
         phoneNumber: data['PhoneNumber'] ?? '',
-        profilePicture: data['ProfilePicture'] ?? '',
+        profilePicture: data['profilePicture'] ?? '',
         gender: data['Gender'] ?? '',
         dateOfBirth: data['DateOfBirth'] ?? '',
         address: data['Address'] ?? '',

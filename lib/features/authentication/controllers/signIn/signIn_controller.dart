@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart%20';
 import 'package:get_storage/get_storage.dart';
 import 'package:wastenot/data/repositories/authentication/auth_repo.dart';
+import 'package:wastenot/data/repositories/user/user_repo.dart';
 import 'package:wastenot/features/personalization/controllers/user_conntroller.dart';
 import 'package:wastenot/utils/constants/image_strings.dart';
 import 'package:wastenot/utils/https/network_manager.dart';
@@ -25,15 +26,15 @@ class SignInController extends GetxController{
   ///Email and password sign In
   Future<void>emailAndPasswordSignIn() async{
     try{
-      //Start loading
-      // WNFullScreenLoader.openLoadingDialog('Logging you in... ', WNImages.loadingAnimation);
-
       //Check Internet Connectivity
       final isConnected = await NetworkManager.instance.isConnected();
       if(!isConnected){
         WNFullScreenLoader.stopLoading();
         return;
       }
+
+      //Start loading
+      WNFullScreenLoader.openLoadingDialog('Logging in....', WNImages.fullScreenloader);
 
       // Form Validation
       if (loginFormKey.currentState == null || !loginFormKey.currentState!.validate()) {
@@ -57,14 +58,15 @@ class SignInController extends GetxController{
       AuthenticationRepository.instance.screenRedirect();
     }catch(e){
       WNFullScreenLoader.stopLoading();
-      WNLoaders.errorSnackBar(title: "Oh Snap", message: e.toString());
+      WNLoaders.errorSnackBar(title: "Oh Shoot!!", message: e.toString());
     }
   }
 
   ///GOogle signIn Authentication
   Future<void>googleSignIn()async{
     try{
-      WNFullScreenLoader.openLoadingDialog('Logging you in....', WNImages.loadingAnimation);
+
+      WNFullScreenLoader.openLoadingDialog('Logging you in....', WNImages.fullScreenloader);
 
       //Check Internet Connectivity
       final isConnected = await NetworkManager.instance.isConnected();
@@ -72,11 +74,24 @@ class SignInController extends GetxController{
         WNFullScreenLoader.stopLoading();
         return;
       }
+
       //Google Authentication
       final userCredentials = await AuthenticationRepository.instance.signInWithGoogle();
 
-      //Save User Record
-      await userController.saveUserRecord(userCredentials);
+      // //Save User Record
+      // await userController.saveUserRecord(userCredentials);
+
+      // Check if user already exists in Firestore
+      final userRepo = UserRepository.instance;
+      final userDoc = await userRepo.fetchUserDetails();
+
+      if (userDoc.id.isEmpty) {
+        // User does not exist, save new user record
+        await userController.saveUserRecord(userCredentials);
+      } else {
+        // User exists, update local state with existing data
+        userController.user(userDoc);
+      }
 
       //Remove loaders
       WNFullScreenLoader.stopLoading();
@@ -87,9 +102,8 @@ class SignInController extends GetxController{
     }catch(e){
       //Remove loaders
       WNFullScreenLoader.stopLoading();
-      WNLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
+      WNLoaders.errorSnackBar(title: 'Oh Shoot', message: e.toString());
     }
   }
-
 
 }

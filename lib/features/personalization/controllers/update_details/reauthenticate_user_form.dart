@@ -59,7 +59,6 @@ class ReauthenticateUserFormView extends StatelessWidget {
                       onPressed: ()=> controller.reAuthenticateEmailAndPasswordUser(), child: const Text('Verify')
                   )
                 )
-
               ],
             )
           ),

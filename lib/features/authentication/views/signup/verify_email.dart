@@ -30,7 +30,7 @@ class VerifyEmailView extends StatelessWidget {
           child: Column(
             children: [
               ///Image
-              Image(image: const AssetImage(WNImages.verifyEmail), width: WNHelperFunctions.screenWidth() * 0.6),
+              Image(image: const AssetImage('assets/images/verification_images/verifyEmail.png'), width: WNHelperFunctions.screenWidth() * 0.6),
               const SizedBox(height: WNSizes.spaceBtwSections,),
 
               ///Title and Subtitile

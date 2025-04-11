@@ -52,10 +52,6 @@ class OnBoardingView extends StatelessWidget {
 
           ///Circular Button
           OnBoardingCircBtn(),
-          
-
-
-
         ],
       )
     );

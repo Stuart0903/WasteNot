@@ -1,16 +1,13 @@
 
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart%20';
-import 'package:iconsax/iconsax.dart';
-import 'package:wastenot/features/Redeem/views/home/home.dart';
-import 'package:wastenot/features/brands/brands.dart';
-import 'package:wastenot/features/nav_menu/home/views/home_views.dart';
+import 'package:wastenot/features/nav_menu/Dashboard/views/Dashboard.dart';
 import 'package:wastenot/features/nav_menu/qr_scanner/view/qr_scanner_view.dart';
 import 'package:wastenot/features/personalization/views/settings/settings.dart';
 import 'package:wastenot/utils/helpers/helpers.dart';
+import 'features/nav_menu/shop/views/redeem_page.dart';
+import 'features/redeemption/views/redeemption_page.dart';
 
 class NavigationMenu extends StatelessWidget {
   const NavigationMenu({super.key});
@@ -48,8 +45,8 @@ class NavigationController extends GetxController{
   final Rx<int> selectedIndex = 0.obs;
 
   final screens = [
-    const HomeView(),
-    HomePageView(),
+    DashboardView(),
+    RedeemPageScreen(),
     const QRScannerPage(),
     const SettingsView(),
   ];

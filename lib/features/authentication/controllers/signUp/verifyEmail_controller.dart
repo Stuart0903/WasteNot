@@ -56,7 +56,7 @@ class VerifyEmailController extends GetxController {
     if(currentUser!= null && currentUser.emailVerified){
       Get.off(
           ()=> SuccessScreen(
-              image: WNImages.loadingAnimation,
+              image: WNImages.successEmail,
               title: WNTexts.createAccountTitle,
               subTitle: WNTexts.createAccountSubTitle,
               onPressed: ()=> AuthenticationRepository.instance.screenRedirect())

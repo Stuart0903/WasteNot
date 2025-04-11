@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:wastenot/common/widgets/appbar/appbar.dart';
-import 'package:wastenot/features/personalization/controllers/update_details/update_name_controller.dart';
 import 'package:wastenot/utils/constants/sizes.dart';
 import 'package:wastenot/utils/constants/text_strings.dart';
 import 'package:wastenot/utils/validators/validation.dart';
+
+import '../../../controllers/update_details/update_user_details_controllers.dart';
 
 class ChangeNameView extends StatelessWidget {
   const ChangeNameView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(UpdateNameController());
+    final controller = Get.put(UpdateUserDetailsControllers());
     return Scaffold(
       appBar: WNAppBar(
         title: Text('Change your name', style: Theme.of(context).textTheme.headlineSmall,),
@@ -29,7 +30,7 @@ class ChangeNameView extends StatelessWidget {
 
             ///Form
             Form(
-              key: controller.updateUserNameFormKey,
+              key: controller.updateFullNameFormKey,
               child: Column(
                 children: [
                   TextFormField(
@@ -51,7 +52,7 @@ class ChangeNameView extends StatelessWidget {
             const SizedBox(height: WNSizes.spaceBtwSections),
 
             ///Save Buton
-            SizedBox(width: double.infinity, child: ElevatedButton(onPressed: ()=> controller.updateUserName(), child: Text('Save')))
+            SizedBox(width: double.infinity, child: ElevatedButton(onPressed: ()=> controller.updateFullName(), child: Text('Save')))
 
 
           ],

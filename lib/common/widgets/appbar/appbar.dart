@@ -13,6 +13,7 @@ class WNAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.leadingIcon,
     this.action,
     this.leadingOnPressed,
+    this.onPressed,
   });
 
   final Widget? title;
@@ -21,6 +22,7 @@ class WNAppBar extends StatelessWidget implements PreferredSizeWidget {
   final IconData? leadingIcon;
   final List<Widget>? action;
   final VoidCallback? leadingOnPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,11 @@ class WNAppBar extends StatelessWidget implements PreferredSizeWidget {
         automaticallyImplyLeading: false,
         leading: showBackArrow
             ? IconButton(
-          onPressed: () => Get.back(),
+          onPressed: onPressed ??
+                  () {
+                // If onPressed is not provided, default to Get.back()
+                Get.back();
+              },
           icon: const Icon(Iconsax.arrow_left),
         )
             : leadingIcon != null

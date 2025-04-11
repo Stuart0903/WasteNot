@@ -8,7 +8,7 @@ class OnBoardingController extends GetxController{
   static OnBoardingController get instance => Get.find();
 
   ///Variables
-  final pageController = PageController();
+  late final pageController = PageController();
   Rx<int> currentPageIndex = 0.obs;
 
 
@@ -38,7 +38,12 @@ class OnBoardingController extends GetxController{
   void skipPage(){
     currentPageIndex.value = 2;
     pageController.jumpToPage(2);
-    Get.to(LoginView());
+
+    // Set isFirstTime to false in storage
+    final storage = GetStorage();
+    storage.write('isFirstTime', false);
+
+    Get.offAll(const LoginView());
   }
 
 

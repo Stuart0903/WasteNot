@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:wastenot/common/widgets/appbar/appbar.dart';
+import 'package:wastenot/features/nav_menu/qr_scanner/view/widgets/gallery_button.dart';
 import 'package:wastenot/features/nav_menu/qr_scanner/view/widgets/scan_instruction_card.dart';
 import 'package:wastenot/utils/constants/colors.dart';
 import 'package:wastenot/utils/constants/sizes.dart';
@@ -25,23 +26,10 @@ class QRScannerPage extends StatelessWidget {
       body: Column(
         children: [
           // "Choose from Gallery" button at the top
-          Padding(
-            padding: const EdgeInsets.all(WNSizes.md),
-            child: ElevatedButton.icon(
-              onPressed: controller.pickImageFromGallery,
-              icon: const Icon(Icons.photo_library, color: Colors.white),
-              label: const Text(
-                'Choose from Gallery',
-                style: TextStyle(color: Colors.white),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: WNColors.primary,
-                padding: const EdgeInsets.all(WNSizes.md),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(WNSizes.buttonRadius),
-                ),
-              ),
-            ),
+          GalleryButton(
+            onPressed: controller.pickImageFromGallery,
+            backgroundColor: WNColors.primary,
+            icon: Icons.photo_library,
           ),
 
           // QR scanner section in the middle
@@ -88,3 +76,4 @@ class QRScannerPage extends StatelessWidget {
     );
   }
 }
+

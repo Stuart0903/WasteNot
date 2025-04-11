@@ -1,22 +1,25 @@
-// File: lib/features/nav_menu/qr_scanner/view/qr_detail_page.dart
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:wastenot/common/widgets/appbar/appbar.dart';
+import 'package:wastenot/features/nav_menu/qr_scanner/controller/deposit_controller.dart';
+import 'package:wastenot/features/nav_menu/qr_scanner/controller/userPoint_controller.dart';
 import 'package:wastenot/features/nav_menu/qr_scanner/view/widgets/recycling_item_card.dart';
 import 'package:wastenot/navigation_menu.dart';
 import 'package:wastenot/utils/constants/colors.dart';
 import 'package:wastenot/utils/constants/sizes.dart';
+import 'package:wastenot/utils/popups/loaders.dart';
 import '../controller/qr_scanner_controller.dart';
 import '../model/qr_scanner_model.dart';
 
-
 class QRDetailPage extends StatelessWidget {
   final Map<String, Map<String, dynamic>> scannedData;
+  final String qrId;
 
   const QRDetailPage({
     Key? key,
     required this.scannedData,
+    this.qrId = '',
   }) : super(key: key);
 
   int calculateTotalPoints() {
@@ -29,7 +32,7 @@ class QRDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QRScannerController controller = Get.find<QRScannerController>();
+    final QRScannerController controller = Get.put(QRScannerController());
     final totalPoints = calculateTotalPoints();
     final totalItems = scannedData.values.fold(0, (sum, item) => sum + (item['count'] as int));
 
@@ -37,18 +40,19 @@ class QRDetailPage extends StatelessWidget {
       appBar: WNAppBar(
         title: const Text('Recycling Details'),
         showBackArrow: true,
+        onPressed: () {
+          controller.resetScan();
+          Get.back();
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.all(WNSizes.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header section
+            // QR ID section removed
             _buildHeaderSection(context, totalItems),
-
             const SizedBox(height: WNSizes.spaceBtwSections),
-
-            // Materials list
             Text(
               'Materials',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -56,8 +60,6 @@ class QRDetailPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: WNSizes.sm),
-
-            // List of recycling items
             Expanded(
               child: ListView.builder(
                 itemCount: scannedData.length,
@@ -73,8 +75,6 @@ class QRDetailPage extends StatelessWidget {
                 },
               ),
             ),
-
-            // Points summary and claim button
             _buildBottomSection(context, controller, totalPoints),
           ],
         ),
@@ -121,6 +121,9 @@ class QRDetailPage extends StatelessWidget {
   }
 
   Widget _buildBottomSection(BuildContext context, QRScannerController controller, int totalPoints) {
+    final userPointController = Get.put(UserPointController());
+    final depositController = Get.put(DepositController());
+
     return Container(
       padding: const EdgeInsets.all(WNSizes.md),
       decoration: BoxDecoration(
@@ -149,31 +152,65 @@ class QRDetailPage extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
-                // Show success notification
-                Get.snackbar(
-                  'Claim Successful',
-                  'You have claimed $totalPoints points!',
-                  snackPosition: SnackPosition.TOP,
-                  backgroundColor: Colors.green,
-                  colorText: Colors.white,
-                  duration: const Duration(seconds: 2),
-                  margin: const EdgeInsets.all(WNSizes.md),
-                  borderRadius: WNSizes.md,
-                  icon: const Icon(
-                    Icons.check_circle,
-                    color: Colors.white,
-                  ),
-                );
+              onPressed: () async {
+                try {
+                  // Show loading indicator
+                  Get.dialog(
+                    const Center(child: CircularProgressIndicator()),
+                    barrierDismissible: false,
+                  );
 
-                // Wait for snackbar to be visible before navigating
-                Future.delayed(const Duration(seconds: 1), () {
-                  controller.resetScan();
+                  // Check for duplicate QR
+                  final isDuplicate = await controller.isQrDuplicate();
+                  Get.back();
 
-                  // Navigate to home and ensure Home tab is selected
-                  Get.offAll(() => const NavigationMenu());
-                  Get.find<NavigationController>().selectedIndex.value = 0;
-                });
+                  if (isDuplicate) {
+                    Get.snackbar(
+                      'Duplicate QR Code',
+                      'This QR code has already been claimed',
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: Colors.orange,
+                      colorText: Colors.white,
+                    );
+                    await Future.delayed(const Duration(milliseconds: 1500));
+                    Get.back();
+                  } else {
+                    await userPointController.updateUserPoints(totalPoints);
+                    await depositController.createDeposit(scannedData, totalPoints.toDouble());
+                    await controller.qrdetail();
+
+                    Get.snackbar(
+                      'Claim Successful',
+                      'You have claimed $totalPoints points!',
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: Colors.green,
+                      colorText: Colors.white,
+                      duration: const Duration(seconds: 2),
+                      margin: const EdgeInsets.all(WNSizes.md),
+                      borderRadius: WNSizes.md,
+                      icon: const Icon(Icons.check_circle, color: Colors.white),
+                    );
+
+                    await Future.delayed(const Duration(seconds: 1));
+                    controller.resetScan();
+                    Get.offAll(() => const NavigationMenu());
+                    Get.find<NavigationController>().selectedIndex.value = 0;
+                  }
+                } catch (e) {
+                  if (Get.isDialogOpen!) Get.back();
+
+                  Get.snackbar(
+                    'Error',
+                    'Failed to claim points: ${e.toString()}',
+                    snackPosition: SnackPosition.TOP,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                    duration: const Duration(seconds: 3),
+                    margin: const EdgeInsets.all(WNSizes.md),
+                    borderRadius: WNSizes.md,
+                    icon: const Icon(Icons.error, color: Colors.white),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: WNColors.primary,

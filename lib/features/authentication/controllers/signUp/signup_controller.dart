@@ -45,16 +45,6 @@ class SignUpController extends GetxController{
   /// SignUp
   void signup() async{
     try{
-      //Start Loading
-      // WNFullScreenLoader.openLoadingDialog('We are processing your information', WNImages.loadingAnimation);
-
-      //Check Internet Connectivity
-      final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected){
-        // WNFullScreenLoader.stopLoading();
-        return;
-      }
-
       //Form Validation
       if (!signupFormkey.currentState!.validate()){
         return;
@@ -65,6 +55,20 @@ class SignUpController extends GetxController{
         WNLoaders.warningSnackBar(
             title: "Accept Privacy Policy",
             message: 'In order to create an account, you must accept the Privacy Policy & Terms of Use'
+        );
+        return;
+      }
+
+      // Start Loading
+      WNFullScreenLoader.openLoadingDialog('We are processing your information', WNImages.fullScreenloader);
+
+      //Check Internet Connectivity
+      final isConnected = await NetworkManager.instance.isConnected();
+      if (!isConnected){
+        WNFullScreenLoader.stopLoading();
+        WNLoaders.errorSnackBar(
+            title: 'No Internet',
+            message: 'Please check your internet connection and try again.'
         );
         return;
       }
@@ -97,8 +101,7 @@ class SignUpController extends GetxController{
 
     }catch(e){
       WNFullScreenLoader.stopLoading();
-
-      WNLoaders.errorSnackBar(title: 'Oh Snap', message: e.toString());
+      WNLoaders.errorSnackBar(title: 'Oh Shoot!!', message: e.toString());
     }
   }
 }

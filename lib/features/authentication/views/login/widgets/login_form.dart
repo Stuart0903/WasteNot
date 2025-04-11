@@ -86,8 +86,8 @@ class WNLoginForm extends StatelessWidget {
                   onPressed: ()=> controller.emailAndPasswordSignIn(),
                   child: Text(WNTexts.signIn))),
           const SizedBox(height: WNSizes.spaceBtwItems),
+
           ///Create Account Button
-          // SizedBox(width: double.infinity, child: OutlinedButton(onPressed: () => Get.to(() => const SignupView()) {}, child: Text(WNTexts.createAccount)))
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(onPressed: () => Get.to(SignupView()), child: const Text(WNTexts.createAccount)),

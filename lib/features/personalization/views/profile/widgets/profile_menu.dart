@@ -9,8 +9,9 @@ class WNProfileMenu extends StatelessWidget {
     this.onPressed,
     required this.title,
     required this.value,
+    this.rightIcon,
   });
-  final IconData icon;
+  final IconData? icon, rightIcon;
   final VoidCallback? onPressed;
   final String title, value;
 
@@ -22,9 +23,13 @@ class WNProfileMenu extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: WNSizes.spaceBtwItems / 1.5),
         child: Row(
           children: [
+            /// Icon
+            Icon(icon, size: 18), // Add an icon in front
+            const SizedBox(width: WNSizes.spaceBtwItems),
+
             Expanded(flex: 3, child: Text(title, style: Theme.of(context).textTheme.bodySmall, overflow: TextOverflow.ellipsis,)),
             Expanded(flex: 5, child: Text(value, style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.ellipsis,)),
-            Expanded(child: Icon(icon, size: 18)),
+            Expanded(child: Icon(rightIcon, size: 18)),
           ],
         ),
       ),
